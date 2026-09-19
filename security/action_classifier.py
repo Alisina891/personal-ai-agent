@@ -21,4 +21,4 @@ class ActionClassifier:
         if "web" in action:
             return ActionType.WEB_READ
 
-        raise ValueError("Unknown action")
+        return ActionType.UNKNOWN

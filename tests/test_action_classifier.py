@@ -7,8 +7,9 @@ from security.action_type import ActionType
 def test_unknown_action():
     classifier = ActionClassifier()
 
-    with pytest.raises(ValueError):
-        classifier.classify("Do something unknown")
+    result = classifier.classify("Do something unknown")
+
+    assert result == ActionType.UNKNOWN
 
 def test_classify_file_delete():
     classifier = ActionClassifier()

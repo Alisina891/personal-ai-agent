@@ -7,3 +7,4 @@ class ActionType(Enum):
     FILE_DELETE = "file_delete"
     WEB_READ = "web_read"
     WEB_SEARCH = "web_search"
+    UNKNOWN = "unknown"
