@@ -24,3 +24,12 @@ def test_deny_cannot_execute():
     result = guard.can_execute(PermissionState.DENY)
 
     assert result is False
+
+def test_denied_action_cannot_bypass_guard():
+    guard = ActionGuard()
+
+    permission = PermissionState.DENY
+
+    result = guard.can_execute(permission)
+
+    assert result is False

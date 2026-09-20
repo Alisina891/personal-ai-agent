@@ -15,3 +15,11 @@ def test_confirmation_is_rejected():
     result = manager.confirm(False)
 
     assert result is False
+
+
+def test_missing_confirmation_is_not_approved():
+    manager = ConfirmationManager()
+
+    result = manager.confirm(False)
+
+    assert result is False
