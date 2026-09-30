@@ -1,5 +1,7 @@
-from ai.provider import AIProvider
 import requests
+
+from ai.provider import AIProvider
+from errors.exceptions import AIError
 
 
 class LocalAIProvider(AIProvider):
@@ -17,18 +19,41 @@ class LocalAIProvider(AIProvider):
         return "ollama"
 
     def generate(self, prompt: str) -> str:
-        response = requests.post(
-            f"{self.base_url}/api/generate",
-            json={
-                "model": self.model,
-                "prompt": prompt,
-                "stream": False,
-            },
-            timeout=240,
-        )
+        try:
+            response = requests.post(
+                f"{self.base_url}/api/generate",
+                json={
+                    "model": self.model,
+                    "prompt": prompt,
+                    "stream": False,
+                },
+                timeout=240,
+            )
 
-        response.raise_for_status()
+            response.raise_for_status()
 
-        data = response.json()
+            data = response.json()
 
-        return data["response"]
+            result = data["response"]
+
+            if not isinstance(result, str):
+                raise AIError(
+                    "Local AI provider returned a non-string response."
+                )
+
+            if not result.strip():
+                raise AIError(
+                    "Local AI provider returned an empty response."
+                )
+
+            return result
+
+        except requests.exceptions.RequestException as exc:
+            raise AIError(
+                "Local AI provider request failed."
+            ) from exc
+
+        except (ValueError, KeyError, TypeError) as exc:
+            raise AIError(
+                "Local AI provider returned an invalid response."
+            ) from exc
